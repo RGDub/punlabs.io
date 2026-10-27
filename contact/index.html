@@ -43,7 +43,7 @@
 </div>
 <div class="row">
 <div><label for="ct-company">Company <span class="opt">(optional)</span></label><input type="text" id="ct-company" name="entry.286421248" autocomplete="organization" maxlength="160"></div>
-<div><label for="ct-topic">What's it about?</label><select id="ct-topic" name="entry.1877716937" data-topic><option>General question</option><option>Wholesale or volume order</option><option>Corporate gifting</option><option>Partnership</option><option>Press</option><option>Question about an order</option><option>Serious Supply updates</option><option>Something else</option></select></div>
+<div><label for="ct-topic">What's it about?</label><select id="ct-topic" name="entry.1877716937" data-topic><option>General question</option><option>Wholesale or volume order</option><option>Corporate gifting</option><option>Partnership</option><option>Press</option><option>Question about an order</option><option>Serious Supply updates</option><option>PneumART updates</option><option>Something else</option></select></div>
 </div>
 <div><label for="ct-msg">Message</label><textarea id="ct-msg" name="entry.8622245" required maxlength="3000"></textarea></div>
 <p class="err" role="alert">Your message didn't send. Check your connection and try again, or email <a href="mailto:grant.weatherford@punlabs.io">grant.weatherford@punlabs.io</a>.</p>
@@ -84,7 +84,7 @@
 <script>
 (function(){
   var params; try{params=new URLSearchParams(location.search);}catch(e){params=null;}
-  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates"};
+  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates",pneumart:"PneumART updates"};
   document.querySelectorAll("form[data-pl-form]").forEach(function(form){
     var src=form.querySelector("[data-src]");
     if(params&&src){var s=params.get("src");if(s)src.value=s==="qr"?"QR code":s.slice(0,60);}

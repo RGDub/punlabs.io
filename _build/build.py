@@ -199,6 +199,15 @@ section{padding:64px 0}
 .design-list .gpencil{display:block;width:100%;height:auto}
 .design-list p{margin:12px 0 0;font-size:15px;line-height:1.5}
 
+/* pneumart */
+.pneumart{background:#F4F0E8;color:#3A3A38}
+.pneumart .soon{display:inline-block;border:2px solid #B85532;color:#B85532;border-radius:999px;padding:4px 14px;font-weight:600;font-size:15px;margin-bottom:22px}
+.pa-word{font-weight:400;font-size:clamp(44px,8vw,84px);letter-spacing:-.01em;line-height:1;margin:0 0 14px;color:#3A3A38}
+.pa-word span{color:#B85532;font-weight:600}
+.pa-tag{font-size:clamp(20px,2.6vw,26px);font-weight:300;font-style:italic;margin-bottom:18px}
+.pneumart a{color:#9A4326}
+.pneumart a:hover{color:#B85532}
+
 /* page header */
 .page-head{padding:48px 0 8px}
 @media(min-width:900px){.page-head{padding:72px 0 16px}}
@@ -248,7 +257,7 @@ section{padding:64px 0}
 FORM_JS = r"""<script>
 (function(){
   var params; try{params=new URLSearchParams(location.search);}catch(e){params=null;}
-  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates"};
+  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates",pneumart:"PneumART updates"};
   document.querySelectorAll("form[data-pl-form]").forEach(function(form){
     var src=form.querySelector("[data-src]");
     if(params&&src){var s=params.get("src");if(s)src.value=s==="qr"?"QR code":s.slice(0,60);}
@@ -304,7 +313,7 @@ def wholesale_form():
 
 def contact_form():
     opts = ["General question", "Wholesale or volume order", "Corporate gifting", "Partnership", "Press",
-            "Question about an order", "Serious Supply updates", "Something else"]
+            "Question about an order", "Serious Supply updates", "PneumART updates", "Something else"]
     o = "".join(f'<option>{html.escape(x)}</option>' for x in opts)
     return f'''<form class="pl-form" id="ct-form" action="{ACTION}" method="POST" target="ct-sink" data-pl-form data-kind="contact">
 <input type="hidden" name="{field('form')}" value="Contact">
@@ -482,6 +491,16 @@ FIRST_DESIGNS_HTML = ('<div class="wrap designs"><h3>First designs</h3><p class=
                       + "".join(f'<li>{svg}<p><strong>{html.escape(n)}</strong><br>{html.escape(d)}</p></li>' for n, d, svg in FIRST_DESIGNS)
                       + '</ul></div>')
 
+PNEUMART_SECTION = '''<section class="pneumart" id="pneumart" aria-labelledby="pa-h">
+<div class="wrap">
+<span class="soon">Coming soon</span>
+<h2 id="pa-h" class="pa-word">Pneum<span>ART</span></h2>
+<p class="pa-tag">The spirit of Art lives here.</p>
+<p>A new art supply line from Pun Labs.</p>
+<p>Want to hear when it launches? <a href="/contact/?topic=pneumart">Ask to be told</a>.</p>
+</div>
+</section>'''
+
 SERIOUS_SECTION = f'''<section class="serious" id="serious-supply" aria-labelledby="ss-h">
 <div class="wrap split">
 <div>
@@ -535,7 +554,7 @@ def home():
 
 
 def brands():
-    body = f'''<div class="page-head"><div class="wrap"><h1>Our brands</h1><p class="lede">Pun Labs is the company behind Pop Colors, with a new office line on the way.</p></div></div>
+    body = f'''<div class="page-head"><div class="wrap"><h1>Our brands</h1><p class="lede">Pun Labs is the company behind Pop Colors, with new office and art lines on the way.</p></div></div>
 <section aria-labelledby="pop-h" style="padding-top:32px">
 <div class="wrap">
 <div class="split">
@@ -560,8 +579,9 @@ def brands():
 <div style="margin-top:48px">{product_grid(PRODUCTS, four=True)}</div>
 </div>
 </section>
-{SERIOUS_SECTION}'''
-    return page("/brands/", "Our brands", "Pop Colors colored pencil sets and coloring pages, and Serious Supply, a new office line coming soon from Pun Labs.", body)
+{SERIOUS_SECTION}
+{PNEUMART_SECTION}'''
+    return page("/brands/", "Our brands", "Pop Colors colored pencil sets and coloring pages, plus Serious Supply and PneumART, new office and art lines coming soon from Pun Labs.", body)
 
 
 def wholesale():

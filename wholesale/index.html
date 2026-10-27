@@ -110,7 +110,7 @@
 <script>
 (function(){
   var params; try{params=new URLSearchParams(location.search);}catch(e){params=null;}
-  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates"};
+  var topics={wholesale:"Wholesale or volume order",gifting:"Corporate gifting",partner:"Partnership",press:"Press",order:"Question about an order",serious:"Serious Supply updates",pneumart:"PneumART updates"};
   document.querySelectorAll("form[data-pl-form]").forEach(function(form){
     var src=form.querySelector("[data-src]");
     if(params&&src){var s=params.get("src");if(s)src.value=s==="qr"?"QR code":s.slice(0,60);}
