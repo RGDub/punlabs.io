@@ -117,6 +117,13 @@ section{padding:64px 0}
 .memo p{line-height:30px;margin:0;font-size:16px}
 .serious .pencils .pencil:nth-child(even){margin-left:0}
 .serious .pencils{gap:12px;margin-top:8px}
+.designs{margin-top:56px}
+.designs h3{font-size:24px;margin-bottom:4px}
+.design-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:28px}
+@media(min-width:900px){.design-list{grid-template-columns:repeat(3,1fr);gap:32px}}
+.design-list li{border-top:2px solid var(--steel-ink);padding-top:18px}
+.design-list .gpencil{display:block;width:100%;height:auto}
+.design-list p{margin:12px 0 0;font-size:15px;line-height:1.5}
 
 /* page header */
 .page-head{padding:48px 0 8px}

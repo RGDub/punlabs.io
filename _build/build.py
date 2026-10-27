@@ -191,6 +191,13 @@ section{padding:64px 0}
 .memo p{line-height:30px;margin:0;font-size:16px}
 .serious .pencils .pencil:nth-child(even){margin-left:0}
 .serious .pencils{gap:12px;margin-top:8px}
+.designs{margin-top:56px}
+.designs h3{font-size:24px;margin-bottom:4px}
+.design-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:28px}
+@media(min-width:900px){.design-list{grid-template-columns:repeat(3,1fr);gap:32px}}
+.design-list li{border-top:2px solid var(--steel-ink);padding-top:18px}
+.design-list .gpencil{display:block;width:100%;height:auto}
+.design-list p{margin:12px 0 0;font-size:15px;line-height:1.5}
 
 /* page header */
 .page-head{padding:48px 0 8px}
@@ -421,6 +428,60 @@ SERIOUS_LINES = ["SERIOUS SUPPLY. FOR WRITING, NOT FUN.", "SERIOUS SUPPLY. MANDA
                  "SERIOUS SUPPLY. PLEASE DO NOT SMILE.", "SERIOUS SUPPLY. ATTEND THE MEETING."]
 SERIOUS_PENCILS = "".join(pencil(t, YELLOW, 100, tone="ink", font="Courier Prime", base=430) for t in SERIOUS_LINES)
 
+def graphite_pencil(label, body, light, dark, ink, parts, shape="hex", uid="g"):
+    """A graphite office pencil with eraser and ferrule, pointing right, imprint along the barrel.
+    parts: list of (x, kind, value) where kind is 'text' or 'bubbles' (value = count)."""
+    w, top, h = 560, 6, 40
+    bx = w - 66
+    if shape == "round":
+        fill = f'url(#{uid})'
+        defs = (f'<defs><linearGradient id="{uid}" x1="0" y1="0" x2="0" y2="1">'
+                f'<stop offset="0" stop-color="{dark}"/><stop offset=".28" stop-color="{light}"/>'
+                f'<stop offset=".55" stop-color="{body}"/><stop offset="1" stop-color="{dark}"/></linearGradient></defs>')
+        facets = ""
+    else:
+        fill, defs = body, ""
+        facets = (f'<rect x="64" y="{top}" width="{bx-64}" height="12" fill="{light}"/>'
+                  f'<rect x="64" y="{top+h-12}" width="{bx-64}" height="12" fill="{dark}"/>')
+    imprint = []
+    for x, kind, val in parts:
+        if kind == "text":
+            imprint.append(f'<text x="{x}" y="{top+h/2+5}" font-family="Courier Prime, monospace" font-size="13" font-weight="700" fill="{ink}">{html.escape(val)}</text>')
+        else:
+            for i in range(val):
+                imprint.append(f'<circle cx="{x + i*15}" cy="{top+h/2}" r="5" fill="none" stroke="{ink}" stroke-width="1.6"/>')
+    return f'''<svg class="gpencil" viewBox="0 0 {w} 52" role="img" aria-label="{html.escape(label)}">{defs}
+<rect x="0" y="{top+2}" width="30" height="{h-4}" rx="5" fill="#E8A5A2"/>
+<rect x="26" y="{top}" width="38" height="{h}" fill="#C7CBD1"/>
+<rect x="26" y="{top}" width="38" height="8" fill="#E2E5E9"/>
+<rect x="34" y="{top}" width="3" height="{h}" fill="#9EA4AC"/><rect x="53" y="{top}" width="3" height="{h}" fill="#9EA4AC"/>
+<rect x="64" y="{top}" width="{bx-64}" height="{h}" fill="{fill}"/>{facets}
+<polygon points="{bx},{top} {w-20},{top+h/2-5} {w-20},{top+h/2+5} {bx},{top+h}" fill="#E9C9A0"/>
+<polygon points="{bx},{top} {w-20},{top+h/2-5} {w-20},{top+h/2-1} {bx},{top+12}" fill="#F2D9B6"/>
+<polygon points="{w-20},{top+h/2-5} {w},{top+h/2} {w-20},{top+h/2+5}" fill="#3B3B3D"/>
+{''.join(imprint)}
+</svg>'''
+
+
+FIRST_DESIGNS = [
+    ("7901 Pencil-Supervisor", "Royal blue, round, with foil lettering. Stupendous graphite.",
+     graphite_pencil("7901 Pencil-Supervisor pencil", "#2346A8", "#4A6FD0", "#152C73", "#E6C76A",
+                     [(84, "text", "SERIOUS SUPPLY CO."), (262, "text", "7901 PENCIL-SUPERVISOR"),
+                      ], shape="round", uid="gp1")),
+    ("Test Slaying 101", "Black, round, with answer-sheet bubbles.",
+     graphite_pencil("Test Slaying 101 pencil", "#1E1E20", "#4A4A4E", "#0A0A0B", "#F1F1F1",
+                     [(84, "text", "TEST SLAYING 101"), (240, "bubbles", 5), (322, "text", "SERIOUS SUPPLY CO.")],
+                     shape="round", uid="gp2")),
+    ("601 Good News", "Silver, hexagonal, plain graphite.",
+     graphite_pencil("601 Good News pencil", "#B9BEC5", "#D8DCE1", "#959BA3", "#1B1B1B",
+                     [(84, "text", "601 SERIOUS SUPPLY CO. GOOD NEWS"), (352, "text", "CHARLOTTE, N.C.")],
+                     shape="hex", uid="gp3")),
+]
+
+FIRST_DESIGNS_HTML = ('<div class="wrap designs"><h3>First designs</h3><p class="typed">Three graphite pencils, now in development.</p><ul class="design-list">'
+                      + "".join(f'<li>{svg}<p><strong>{html.escape(n)}</strong><br>{html.escape(d)}</p></li>' for n, d, svg in FIRST_DESIGNS)
+                      + '</ul></div>')
+
 SERIOUS_SECTION = f'''<section class="serious" id="serious-supply" aria-labelledby="ss-h">
 <div class="wrap split">
 <div>
@@ -431,6 +492,7 @@ SERIOUS_SECTION = f'''<section class="serious" id="serious-supply" aria-labelled
 </div>
 <div class="pencils" aria-label="Serious Supply pencil imprints">{SERIOUS_PENCILS}</div>
 </div>
+{FIRST_DESIGNS_HTML}
 </section>'''
 
 
