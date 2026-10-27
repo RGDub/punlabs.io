@@ -125,6 +125,16 @@ section{padding:64px 0}
 .design-list .gpencil{display:block;width:100%;height:auto}
 .design-list p{margin:12px 0 0;font-size:15px;line-height:1.5}
 
+/* veteran-owned + apparel */
+.vet{display:flex;align-items:center;gap:8px;margin:22px 0 0;padding:0;color:var(--punlabs-dark);font-weight:600;font-size:15px;line-height:1.3}
+.vet svg{flex:0 0 auto;color:var(--punlabs)}
+.page-head .vet{margin-top:4px}
+.apparel{padding-top:32px}
+.vet-card{background:var(--mist);border-radius:14px;padding:28px;align-self:start}
+.vet-card .star{color:var(--punlabs);margin-bottom:10px}
+.vet-card h3{margin-bottom:8px}
+.vet-card p{margin:0}
+
 /* pneumart */
 .pneumart{background:#F4F0E8;color:#3A3A38}
 .pneumart .soon{display:inline-block;border:2px solid #B85532;color:#B85532;border-radius:999px;padding:4px 14px;font-weight:600;font-size:15px;margin-bottom:22px}

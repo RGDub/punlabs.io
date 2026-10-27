@@ -199,6 +199,16 @@ section{padding:64px 0}
 .design-list .gpencil{display:block;width:100%;height:auto}
 .design-list p{margin:12px 0 0;font-size:15px;line-height:1.5}
 
+/* veteran-owned + apparel */
+.vet{display:flex;align-items:center;gap:8px;margin:22px 0 0;padding:0;color:var(--punlabs-dark);font-weight:600;font-size:15px;line-height:1.3}
+.vet svg{flex:0 0 auto;color:var(--punlabs)}
+.page-head .vet{margin-top:4px}
+.apparel{padding-top:32px}
+.vet-card{background:var(--mist);border-radius:14px;padding:28px;align-self:start}
+.vet-card .star{color:var(--punlabs);margin-bottom:10px}
+.vet-card h3{margin-bottom:8px}
+.vet-card p{margin:0}
+
 /* pneumart */
 .pneumart{background:#F4F0E8;color:#3A3A38}
 .pneumart .soon{display:inline-block;border:2px solid #B85532;color:#B85532;border-radius:999px;padding:4px 14px;font-weight:600;font-size:15px;margin-bottom:22px}
@@ -263,6 +273,7 @@ FORM_JS = r"""<script>
     if(params&&src){var s=params.get("src");if(s)src.value=s==="qr"?"QR code":s.slice(0,60);}
     var topic=form.querySelector("select[data-topic]");
     if(params&&topic){var t=topics[params.get("topic")];if(t)topic.value=t;}
+    if(params&&params.get("buy")==="apparel"){var r=form.querySelector('input[value="Corporate apparel"]');if(r)r.checked=true;}
     var sink=document.getElementById(form.getAttribute("target"));
     var err=form.querySelector(".err"), btn=form.querySelector("button[type=submit]"), sent=false;
     form.addEventListener("submit",function(ev){
@@ -301,6 +312,7 @@ def wholesale_form():
 <label><input type="radio" name="{field('buy')}" value="Faire" required> On Faire</label>
 <label><input type="radio" name="{field('buy')}" value="Direct"> Directly from Pun Labs</label>
 <label><input type="radio" name="{field('buy')}" value="Volume or custom"> Volume or custom order</label>
+<label><input type="radio" name="{field('buy')}" value="Corporate apparel"> Corporate apparel</label>
 </div>
 </fieldset>
 <div><label for="ws-msg">Message <span class="opt">(optional)</span></label><textarea id="ws-msg" name="{field('message')}" maxlength="3000" placeholder="What you'd like to carry, quantities, timing, anything else we should know."></textarea></div>
@@ -334,6 +346,9 @@ def contact_form():
 </form>
 <iframe name="ct-sink" id="ct-sink" title="Form submission" hidden style="display:none"></iframe>'''
 
+
+STAR_BIG = '<svg aria-hidden="true" class="star" viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg>'
+VET_BADGE = '<p class="vet"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg><span>Service-disabled veteran-owned business</span></p>'
 
 NAV = [("/brands/", "Brands"), ("/about/", "About"), ("/contact/", "Contact"), ("/wholesale/", "Wholesale")]
 
@@ -396,7 +411,7 @@ def page(path, title, desc, body, extra_js=""):
 <ul><li><a href="{LINKS['shop']}">popcolors.com</a></li><li><a href="{LINKS['amazon']}">Amazon</a></li><li><a href="{LINKS['etsy']}">Etsy</a></li><li><a href="{LINKS['faire']}">Faire (for retailers)</a></li></ul>
 </div>
 </div>
-<p class="parent small">Pun Labs is a <a href="{LINKS['ubc']}">Universal Benefit Corporation</a> company. &copy; <span data-year>2026</span> Pun Labs LLC.</p>
+<p class="parent small">Pun Labs is a service-disabled veteran-owned business and a <a href="{LINKS['ubc']}">Universal Benefit Corporation</a> company. &copy; <span data-year>2026</span> Pun Labs LLC.</p>
 </div>
 </footer>
 <script>document.querySelectorAll("[data-year]").forEach(function(e){{e.textContent=new Date().getFullYear()}});</script>
@@ -523,6 +538,7 @@ def home():
 <h1>Novelty gifts, office and art supplies.</h1>
 <p class="lede">Pun Labs makes Pop Colors: colored pencil sets where every pencil is foil-stamped with a pun or reference tied to its color, drawn from the shows, films, music, games and artists people love.</p>
 <div class="btns"><a class="btn" href="/wholesale/">Wholesale</a><a class="btn ghost" href="{LINKS['shop']}">Shop Pop Colors</a></div>
+{VET_BADGE}
 </div>
 <div class="pencils" aria-hidden="true">{HERO_PENCILS}</div>
 </div>
@@ -546,7 +562,7 @@ def home():
 <section class="strip" aria-labelledby="ws-h">
 <div class="wrap">
 <h2 id="ws-h">Stocking a store?</h2>
-<p class="lede">Independent shops can order Pop Colors on Faire. For direct accounts, larger volumes, corporate gifts or custom work, tell us what you need.</p>
+<p class="lede">Independent shops can order Pop Colors on Faire. For direct accounts, larger volumes, corporate gifts or custom work, tell us what you need. We also supply <a href="/wholesale/#apparel" style="color:#fff">corporate apparel</a>.</p>
 <div class="btns"><a class="btn" href="/wholesale/">Wholesale options</a><a class="btn ghost" href="{LINKS['faire']}">Order on Faire</a></div>
 </div>
 </section>'''
@@ -585,7 +601,7 @@ def brands():
 
 
 def wholesale():
-    body = f'''<div class="page-head"><div class="wrap"><h1>Wholesale</h1><p class="lede">Pop Colors suits gift shops, bookstores, art supply and museum stores, and corporate gifting. Here's how to order.</p></div></div>
+    body = f'''<div class="page-head"><div class="wrap"><h1>Wholesale</h1><p class="lede">Pop Colors suits gift shops, bookstores, art supply and museum stores, and corporate gifting. Pun Labs also supplies corporate apparel. Here's how to order.</p>{VET_BADGE}</div></div>
 <section style="padding-top:32px" aria-label="Ways to order">
 <div class="wrap">
 <div class="ways">
@@ -594,9 +610,28 @@ def wholesale():
 </div>
 </div>
 </section>
+<section class="apparel" id="apparel" aria-labelledby="ap-h">
+<div class="wrap split">
+<div>
+<h2 id="ap-h">Corporate apparel</h2>
+<p class="lede">Custom apparel for companies, teams and events, printed or embroidered with your logo.</p>
+<ul class="facts">
+<li>Screen-printed T-shirts</li>
+<li>Hoodies and sweatshirts</li>
+<li>Embroidered polos and hats</li>
+</ul>
+<div class="btns"><a class="btn" href="/wholesale/?buy=apparel#inquiry">Request an apparel quote</a></div>
+</div>
+<div class="vet-card">
+{STAR_BIG}
+<h3>Service-disabled veteran-owned</h3>
+<p>Pun Labs is a service-disabled veteran-owned business. If your organization buys from veteran-owned suppliers, tell us in your inquiry what your procurement team needs from us.</p>
+</div>
+</div>
+</section>
 <section class="band" id="inquiry" aria-labelledby="inq-h">
 <div class="wrap">
-<div class="section-head"><h2 id="inq-h">Wholesale inquiry</h2><p>Tell us a little about your store and how you'd like to buy.</p></div>
+<div class="section-head"><h2 id="inq-h">Wholesale and apparel inquiry</h2><p>Tell us a little about your store or company and what you need.</p></div>
 <div class="form-card">{wholesale_form()}</div>
 </div>
 </section>
@@ -606,7 +641,7 @@ def wholesale():
 {product_grid(PRODUCTS[:4], four=True)}
 </div>
 </section>'''
-    return page("/wholesale/", "Wholesale", "Order Pop Colors wholesale on Faire, or contact Pun Labs for direct, volume, corporate gift and custom orders.", body, FORM_JS)
+    return page("/wholesale/", "Wholesale", "Order Pop Colors wholesale on Faire, or contact Pun Labs, a service-disabled veteran-owned business, for direct, volume, custom and corporate apparel orders.", body, FORM_JS)
 
 
 def about():
@@ -616,7 +651,7 @@ def about():
 <div>
 <p class="lede">Pun Labs is a novelty gift, office and art supply company. It makes Pop Colors, a line of colored pencil sets that turn a favorite show, film, band or painter into a box of 12 punny pencils.</p>
 <p>The business was already established when its current owner took it on, with Pop Colors sold through its own store, Amazon, Etsy and independent retailers. Today Pun Labs works out of a studio in Charlotte, North Carolina, where it designs new sets and is developing Serious Supply, its first office line.</p>
-<p>Pun Labs is part of <a href="{LINKS['ubc']}">Universal Benefit Corporation</a>.</p>
+<p>Pun Labs is a service-disabled veteran-owned business and part of <a href="{LINKS['ubc']}">Universal Benefit Corporation</a>. Alongside its own brands, it supplies corporate apparel: <a href="/wholesale/#apparel">see wholesale</a>.</p>
 </div>
 <div>
 <h2>Team</h2>
